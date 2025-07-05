@@ -1,7 +1,12 @@
-export default function Login() {
+import React from "react";
+import DashboardPage from "@/components/features/DashboardPage";
+
+const Dashboard: React.FC = () => {
   return (
-    <main>
-      <div>dashboard</div>
-    </main>
+    <div>
+      <DashboardPage />
+    </div>
   );
-}
+};
+
+export default Dashboard;

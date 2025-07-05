@@ -13,7 +13,7 @@ export default function middleware(req: NextRequest) {
 
   const publicRoute = publicRoutes.find(route => route.path === path)
   const authToken = req.cookies.get('access_token')?.value
-  console.log('Middleware: Checking authentication token:', authToken)
+  //console.log('Middleware: Checking authentication token:', authToken)
 
   if(!authToken && publicRoute) {
     return NextResponse.next()
@@ -22,14 +22,14 @@ export default function middleware(req: NextRequest) {
   if(!authToken && !publicRoute) {
     const redirectURL = req.nextUrl.clone()
     redirectURL.pathname = REDIRECT_WHEN_UNAUTHENTICATED_ROUTE
-    console.log('Redirecting unauthenticated user to login page', redirectURL)
+    //console.log('Redirecting unauthenticated user to login page', redirectURL)
     return NextResponse.redirect(redirectURL)
   }
 
   if(authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect') {
     const redirectURL = req.nextUrl.clone()
     redirectURL.pathname = '/dashboard'
-    console.log('Redirecting authenticated user to home page', redirectURL)
+    //console.log('Redirecting authenticated user to home page', redirectURL)
     return NextResponse.redirect(redirectURL)
   }
 
