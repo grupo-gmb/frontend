@@ -1,12 +1,10 @@
 import React from "react";
-import Layout from "@/components/layout/_Layout";
+import BoxPage from "@/components/features/BoxPage";
 
 const Box: React.FC = () => {
   return (
     <div>
-      <Layout>
-        <h1>Caixas</h1>
-      </Layout>
+      <BoxPage />
     </div>
   );
 };

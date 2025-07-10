@@ -1,12 +1,10 @@
 import React from "react";
-import Layout from "@/components/layout/_Layout";
+import ReportPage from "@/components/features/ReportPage";
 
 const Reports: React.FC = () => {
   return (
     <div>
-      <Layout>
-        <h1>Relatórios</h1>
-      </Layout>
+      <ReportPage />
     </div>
   );
 };

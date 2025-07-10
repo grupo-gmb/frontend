@@ -27,9 +27,9 @@ const drawerWidth = 240;
 
 export const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  { text: "Clientes", icon: <PeopleIcon />, path: "/clients" },
   { text: "Caixas", icon: <InventoryIcon />, path: "/boxes" },
   { text: "Movimentações", icon: <MoveToInboxIcon />, path: "/movements" },
-  { text: "Clientes", icon: <PeopleIcon />, path: "/clients" },
   { text: "Relatórios", icon: <AssessmentIcon />, path: "/reports" },
   { text: "Configurações", icon: <SettingsIcon />, path: "/settings" },
 ];
@@ -49,7 +49,7 @@ const Sidebar: React.FC<SideBarProps> = ({ selected, onNavigate }) => {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "#f7f9fa",
+          backgroundColor: "background.default",
           borderRight: "none",
         },
         display: { xs: "none", md: "block" }, // Esconde no mobile, use Drawer temporário para mobile
@@ -72,8 +72,18 @@ const Sidebar: React.FC<SideBarProps> = ({ selected, onNavigate }) => {
                 my: 0.5,
                 "&.Mui-selected": {
                   backgroundColor: "primary.main",
-                  color: "#fff",
-                  "& .MuiListItemIcon-root": { color: "#fff" },
+                  color: "background.default",
+                  "& .MuiListItemIcon-root": { color: "background.default" },
+                  "&:hover": {
+                    backgroundColor: "primary.light", // Nova cor de hover
+                    color: "background.default", // Cor do texto no hover
+                    "& .MuiListItemIcon-root": { color: "background.default" }, // Cor do ícone no hover
+                  },
+                },
+                "&:hover": {
+                  backgroundColor: "secondary.dark", // Nova cor de hover
+                  color: "background.default", // Cor do texto no hover
+                  "& .MuiListItemIcon-root": { color: "background.default" }, // Cor do ícone no hover
                 },
               }}
             >

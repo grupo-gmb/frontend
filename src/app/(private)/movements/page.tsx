@@ -1,12 +1,10 @@
 import React from "react";
-import Layout from "@/components/layout/_Layout";
+import MovementPage from "@/components/features/MovementPage";
 
 const Movements: React.FC = () => {
   return (
     <div>
-      <Layout>
-        <h1>Movimentações</h1>
-      </Layout>
+      <MovementPage />
     </div>
   );
 };

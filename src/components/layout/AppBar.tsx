@@ -17,9 +17,9 @@ const TopBar: React.FC = (props) => {
       elevation={0}
       sx={{
         display: { xs: "flex", md: "block" }, // Esconde no mobile, use Drawer temporário para mobile}
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "primary.light",
         color: "#111",
-        borderBottom: "1px solid #f0f0f0",
+        borderBottom: "1px solid #f2f2f2",
         zIndex: (theme) => theme.zIndex.drawer + 1, // Garante que fique acima da sidebar
         height: 64,
         justifyContent: "center",
@@ -38,11 +38,11 @@ const TopBar: React.FC = (props) => {
           noWrap
           sx={{
             fontWeight: 700,
-            color: "#111",
+            color: "background.default",
             flexGrow: 1,
             letterSpacing: 0.5,
 
-            fontSize: { xs: 20, sm: 20 },
+            fontSize: { xs: 30, sm: 20 },
           }}
         >
           OrganizaDoc
@@ -51,7 +51,11 @@ const TopBar: React.FC = (props) => {
         {/* Sino de notificação */}
         <IconButton
           color="inherit"
-          sx={{ mr: 1, display: { xs: "none", sm: "none", md: "flex" } }}
+          sx={{
+            mr: 1,
+            color: "background.default",
+            display: { xs: "none", sm: "none", md: "flex" },
+          }}
         >
           <Badge badgeContent={2} color="error">
             <NotificationsIcon />
