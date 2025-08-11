@@ -9,8 +9,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         return NextResponse.json({ message: 'Não autorizado' }, { status: 401 });
     }
     try {
-        const resolvedParams = await params;
-        const response = await api.get(`/documents/box/${resolvedParams.id}`, {  // Padronizado para /box (singular)
+        const { id } = params;
+        const response = await api.get(`/documents/box/${id}`, {  // Padronizado para /box (singular)
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
         });
         return NextResponse.json(response.data);
