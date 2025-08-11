@@ -12,7 +12,7 @@ export default function PublicLayout({
     <div>
       <h1>super_admin@gmb.com</h1>
       <h1>senha1234</h1>
-      <h1>115df89759784557</h1>
+      
       {children}
     </div>
   );
