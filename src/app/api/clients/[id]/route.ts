@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 }
 
 
-export async function DELETE(request: NextRequest, { params }: { params: {id: string }}) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }>}) {
   const session = await auth();
 
   if (!session?.user?.accessToken) {
@@ -37,9 +37,10 @@ export async function DELETE(request: NextRequest, { params }: { params: {id: st
   }
 
   try {
+    const { id } = await context.params;
 
     // A chamada para o backend é feita aqui, no ambiente de servidor
-    const response = await api.delete(`/companies/${params.id}`,  {
+    const response = await api.delete(`/companies/${id}`,  {
       headers: {
         Authorization: `Bearer ${session.user.accessToken}`,
       },
