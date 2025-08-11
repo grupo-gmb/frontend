@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'; // A função de servidor do NextAuth
 import api from '@/services/api'; // Sua instância do Axios
 
 
-export async function PUT(request: NextRequest, { params }: { params: {id: string }}) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }>}) {
   const session = await auth();
 
   if (!session?.user?.accessToken) {
@@ -12,7 +12,7 @@ export async function PUT(request: NextRequest, { params }: { params: {id: strin
 
   try {
 
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
 
     // A chamada para o backend é feita aqui, no ambiente de servidor
