@@ -18,8 +18,10 @@ import {
 import Grid from "@mui/material/Grid";
 
 import Layout from "@/components/layout/_Layout";
+import { useSession } from "next-auth/react";
 
 const DashboardPage = () => {
+  const { data: session } = useSession();
   const recentReports = [
     {
       name: "Relatório de Caixas por Cliente",

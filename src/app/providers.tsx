@@ -3,7 +3,7 @@
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../styles/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/context/AuthContext";
+import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 //customized hooks
 import { SnackbarProvider } from "@/context/SnackBarContext";
@@ -23,14 +23,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
+    <SessionProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
           <SnackbarProvider>
             <DialogProvider>{children}</DialogProvider>
           </SnackbarProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }

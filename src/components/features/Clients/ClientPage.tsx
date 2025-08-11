@@ -1,45 +1,23 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Chip,
-  MenuItem,
-  Select,
-  FormControl,
-  OutlinedInput,
-  Stack,
-  Card,
-  IconButton,
-} from "@mui/material";
-//import { Button } from "../ui/Button";
-
+import { Box, Typography, Button, Chip, IconButton } from "@mui/material";
 import Layout from "@/components/layout/_Layout";
 import { useSnackbar } from "@/context/SnackBarContext";
 import { useDialog } from "@/context/DialogContext";
-import { Add, AddCircle, Delete, Edit } from "@mui/icons-material";
+import { AddCircle, Delete, Edit } from "@mui/icons-material";
 import ClientModal from "./components/ClientModal";
 import { ClientData } from "@/types/client";
 import TableComponent, { Column } from "@/components/ui/Table";
 import * as clientService from "@/services/clientService";
+import { getApiErrorMessage } from "@/utils/getApiErrorMessage";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const statusOptions = ["Todos", "Ativo", "Inativo"];
-const addressOptions = ["Todos", "SP", "PR", "MG"];
-const departmentOptions = ["Todos", "Financeiro", "RH", "Marketing"];
 
 const ClientPage = () => {
   const { showSnackbar } = useSnackbar();
   const { confirm } = useDialog();
+  const { hasPermission } = usePermissions();
 
   const [clients, setClients] = useState<ClientData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,8 +34,10 @@ const ClientPage = () => {
       setIsLoading(true);
       const data = await clientService.getClients();
       setClients(data);
+      console.log("console", data);
     } catch (error) {
-      showSnackbar({ message: "Erro ao buscr clientes.", severity: "error" });
+      showSnackbar({ message: "Erro ao buscar clientes.", severity: "error" });
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -114,25 +94,27 @@ const ClientPage = () => {
     try {
       console.log(modalUpdate, editingClient?.id);
       if (modalUpdate && editingClient?.id) {
-        await clientService.updateClient(editingClient.id, data);
+        const response = await clientService.updateClient(
+          editingClient.id,
+          data
+        );
         showSnackbar({
-          message: "Cliente atualizado com sucesso!",
+          message: response.message || "Cliente atualizado com sucesso!",
           severity: "success",
         });
       } else {
-        await clientService.createClient(data);
+        const response = await clientService.createClient(data);
         showSnackbar({
-          message: "Cliente criado com sucesso!",
-          severity: "error",
+          message: response.message || "Cliente criado com sucesso!",
+          severity: "success",
         });
       }
-      showSnackbar({
-        message: "Cliente salvo com sucesso!",
-        severity: "success",
-      });
+
       fetchClients();
     } catch (error) {
-      showSnackbar({ message: "Erro ao salvar cliente.", severity: "error" });
+      const errorMessage = getApiErrorMessage(error);
+      console.log(errorMessage);
+      showSnackbar({ message: errorMessage, severity: "error" });
     }
   };
 
@@ -175,22 +157,6 @@ const ClientPage = () => {
     }
   };
 
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("Todos");
-  const [address, setAddress] = useState("Todos");
-  const [CNPJ, setCNPJ] = useState("Todos");
-
-  // // Filtro dos clientes
-  // const filteredClients = clients.filter((client) => {
-  //   const matchesSearch = client.name
-  //     .toLowerCase()
-  //     .includes(search.toLowerCase());
-  //   const matchesStatus = status === "Todos" || client.status === status;
-  //   const matchesAddress =
-  //     address === "Todos" || client.address.includes(address);
-  //   const matchesCNPJ = CNPJ === "Todos" || client.CNPJ === CNPJ;
-  //   return matchesSearch && matchesStatus && matchesAddress && matchesCNPJ;
-  // });
   return (
     <Layout>
       <Box sx={{ p: 3 }}>
@@ -203,10 +169,17 @@ const ClientPage = () => {
           }}
         >
           <Typography variant="h4">Clientes</Typography>
+
           <Button
             onClick={() => handleOpenNew()}
             variant="contained"
             startIcon={<AddCircle />}
+            disabled={!hasPermission("company:create")}
+            title={
+              !hasPermission("company:create")
+                ? "Você não tem permissão para criar clientes"
+                : ""
+            }
           >
             Novo Cliente
           </Button>
@@ -218,12 +191,27 @@ const ClientPage = () => {
           renderRowActions={(client) => (
             <>
               <IconButton
+                disabled={!hasPermission("company:update")}
+                title={
+                  !hasPermission("company:update")
+                    ? "Você não tem permissão para criar clientes"
+                    : ""
+                }
                 color="primary"
                 onClick={() => handleOpenEdit(client)}
               >
                 <Edit />
               </IconButton>
-              <IconButton color="error" onClick={() => handleDelete(client)}>
+              <IconButton
+                disabled={!hasPermission("company:delete")}
+                title={
+                  !hasPermission("company:delete")
+                    ? "Você não tem permissão para criar clientes"
+                    : ""
+                }
+                color="error"
+                onClick={() => handleDelete(client)}
+              >
                 <Delete />
               </IconButton>
             </>

@@ -10,6 +10,7 @@ import {
   Avatar,
   Box,
 } from "@mui/material";
+import UserMenu from "./UserMenu";
 const TopBar: React.FC = (props) => {
   return (
     <AppBar
@@ -63,15 +64,7 @@ const TopBar: React.FC = (props) => {
         </IconButton>
 
         {/* Avatar */}
-        <Avatar
-          alt="Usuário"
-          src="https://randomuser.me/api/portraits/men/44.jpg"
-          sx={{
-            width: 36,
-            height: 36,
-            display: { xs: "none", sm: "none", md: "flex" },
-          }}
-        />
+        <UserMenu />
       </Toolbar>
     </AppBar>
   );

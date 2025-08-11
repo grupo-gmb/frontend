@@ -1,7 +1,7 @@
 export interface LoginRequest {
   email: string;
   password: string;
-  company_id: string;
+  
 }
 
 export interface LoginResponse {
