@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import MovementPage from "@/components/features/MovementPage";
 

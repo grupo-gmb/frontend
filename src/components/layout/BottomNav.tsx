@@ -1,23 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper,
-  useMediaQuery,
-} from "@mui/material";
-import {
-  Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Divider,
-} from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 
 import {
   Dashboard as DashboardIcon,
