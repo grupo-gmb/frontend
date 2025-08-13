@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import BoxPage from "@/components/features/Box/BoxPage";
 
