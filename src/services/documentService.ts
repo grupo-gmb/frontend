@@ -21,8 +21,8 @@ export const getDocumentsById = async(id: string): Promise<DocumentData> => {
 }
 
 
-export const createDocument = async (documentData: Omit<DocumentData, 'id'>): Promise<ApiResponse<DocumentData>> => {
+export const createDocument = async (documentData: Omit<DocumentData, 'id'>): Promise<DocumentData> => {
     const response = await nextApi.post('/documents', documentData);
-    return response.data;
+    return response.data.data;
 }
 

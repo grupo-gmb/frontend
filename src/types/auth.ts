@@ -11,6 +11,7 @@ export interface LoginResponse {
     email: string;
     name: string;
     company_id: string;
+    permissions: string[];
     role: string;
   };
 }

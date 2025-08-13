@@ -36,6 +36,7 @@ export const {
             name: loginData.user.name,
             email: loginData.user.email,
             role: loginData.user.role,
+            permissions: loginData.user.permissions,
             accessToken: loginData.access_token, // Incluímos o token da sua API
           };
         }

@@ -17,11 +17,11 @@ export const useBoxActions = (boxId: string, onSuccess?: () => void) => {
       }
        
       const userId = String(session?.user?.id || ""); // Fallback user ID if session is not available
-      console.log("userId", userId);
+      console.log("userId", session?.user?.id);
 
       const movementData = {
         box_id: boxId,
-        user_id: userId , // TODO: get from context
+        user_id: "4f89d7f284ef4314" , // TODO: get from context
         notes: formData.notes || getDefaultNotes(actionType),
       };
 

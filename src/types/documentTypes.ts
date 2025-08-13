@@ -29,6 +29,6 @@ export const DOCUMENT_TYPES = {
   OTHER: "outros",
 } as const;
 
-export const DOCUMENT_TYPES_ARRAY = Object.values(DOCUMENT_TYPES);
-
 export type DocumentType = typeof DOCUMENT_TYPES[keyof typeof DOCUMENT_TYPES];
+export const DOCUMENT_TYPES_ARRAY: readonly DocumentType[] = Object.values(DOCUMENT_TYPES);
+

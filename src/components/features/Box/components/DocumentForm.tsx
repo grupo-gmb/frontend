@@ -10,13 +10,14 @@ import {
   Button,
   IconButton,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { DOCUMENT_TYPES_ARRAY } from "@/types/documentTypes";
+import { DOCUMENT_TYPES_ARRAY, DocumentType } from "@/types/documentTypes";
 
 interface DocumentFormData {
   name: string;
-  type: string;
+  type: DocumentType | null;
   description: string;
 }
 
@@ -24,6 +25,7 @@ interface DocumentFormProps {
   open: boolean;
   onClose: () => void;
   onSave: (document: DocumentFormData) => void;
+
   isLoading?: boolean;
 }
 
@@ -35,7 +37,7 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<DocumentFormData>({
     name: "",
-    type: "",
+    type: null,
     description: "",
   });
 
@@ -48,22 +50,25 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
       }));
     };
 
-  const handleAutocompleteChange = (event: any, newValue: string | null) => {
+  const handleAutocompleteChange = (
+    event: any,
+    newValue: DocumentType | null
+  ) => {
     setFormData((prev) => ({
       ...prev,
-      type: newValue || "",
+      type: newValue,
     }));
   };
 
-  const handleSubmit = () => {
-    if (formData.name.trim() && formData.type.trim()) {
-      onSave(formData);
+  const handleSubmit = async () => {
+    if (formData.name.trim() && formData.type) {
+      await onSave(formData);
       handleClose();
     }
   };
 
   const handleClose = () => {
-    setFormData({ name: "", type: "", description: "" });
+    setFormData({ name: "", type: null, description: "" });
     onClose();
   };
 
@@ -88,7 +93,7 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
             disabled={isLoading}
             placeholder="Ex: Contrato de Prestação de Serviços"
           />
-          <Autocomplete
+          <Autocomplete<DocumentType>
             options={DOCUMENT_TYPES_ARRAY}
             value={formData.type}
             onChange={handleAutocompleteChange}
@@ -150,7 +155,8 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({
         <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={!formData.name.trim() || !formData.type.trim() || isLoading}
+          disabled={!formData.name.trim() || !formData.type || isLoading}
+          startIcon={isLoading ? <CircularProgress size={16} /> : undefined}
         >
           {isLoading ? "Salvando..." : "Salvar"}
         </Button>

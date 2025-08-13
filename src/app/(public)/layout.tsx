@@ -8,12 +8,5 @@ export const metadata: Metadata = {
 export default function PublicLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <div>
-      <h1>super_admin@gmb.com</h1>
-      <h1>senha1234</h1>
-      
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }

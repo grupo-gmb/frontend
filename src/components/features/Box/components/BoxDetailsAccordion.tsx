@@ -43,20 +43,20 @@ import { useSnackbar } from "@/context/SnackBarContext";
 
 interface BoxDetailsAccordionProps {
   box: BoxData;
-  document: DocumentData;
+  document: DocumentData[];
+  onDocumentAdded: (newDocument: DocumentData) => void;
 }
 
 export default function BoxDetailsAccordion({
   box,
   document,
+  onDocumentAdded,
 }: BoxDetailsAccordionProps) {
   const { data: session } = useSession();
   const { showSnackbar } = useSnackbar();
   // Estados
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [documents, setDocuments] = useState<DocumentData[]>(
-    Array.isArray(document) ? document : []
-  );
+  const [documents, setDocuments] = useState<DocumentData[]>(document || []);
   const [currentBox, setCurrentBox] = useState<BoxData>(box);
   const [isDocumentLoading, setIsDocumentLoading] = useState(false);
   const [actionModalOpen, setActionModalOpen] = useState(false);
@@ -83,24 +83,49 @@ export default function BoxDetailsAccordion({
   // Efeitos
   useEffect(() => {
     setCurrentBox(box);
+    console.log("Documents:", documents);
   }, [box]);
+
+ 
 
   // Handlers para documentos
   const handleAddDocument = async (formData: DocumentFormData) => {
+    if (!currentBox.id || !currentBox.company_id) {
+      console.error(
+        "ID da caixa ou da empresa não foi encontrado.",
+        currentBox
+      );
+      showSnackbar({
+        message: "Erro: Dados da caixa estão incompletos.",
+        severity: "error",
+      });
+      throw new Error("Dados essenciais da caixa estão faltando.");
+    }
+
+    if (!formData.type) {
+      showSnackbar({
+        message: "Erro: O tipo do documento é obrigatório.",
+        severity: "error",
+      });
+      throw new Error("O tipo do documento é obrigatório.");
+    }
     try {
       setIsDocumentLoading(true);
 
-      const documentData: Partial<DocumentData> = {
+      const documentData = {
         box_id: currentBox.id!,
         document_name: formData.name,
         type_document: formData.type,
-        user_id: session?.user?.id,
+        user_id: "4f89d7f284ef4314",
         company_id: currentBox.company_id!,
         description: formData.description,
-      };
+      } as Omit<DocumentData, "id">;
 
       const createdDocument =
         await documentService.createDocument(documentData);
+
+      onDocumentAdded(createdDocument);
+
       setDocuments((prev) => [...prev, createdDocument]);
       showSnackbar({
         message: "Documento adicionado com sucesso!",
@@ -259,15 +284,19 @@ export default function BoxDetailsAccordion({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {documents.map((doc) => (
-                  <TableRow key={doc.id}>
-                    <TableCell>{doc.document_name}</TableCell>
-                    <TableCell style={{ textTransform: "uppercase" }}>
-                      {doc.type_document}
-                    </TableCell>
-                    <TableCell>{doc.description}</TableCell>
-                  </TableRow>
-                ))}
+                {/* 1. Filtra o array ANTES de renderizar para remover itens nulos */}
+                {documents
+                  .filter((doc) => doc)
+                  .map((doc) => (
+                    // 2. O .map() agora só recebe itens válidos e não precisa de lógica condicional
+                    <TableRow key={doc.id}>
+                      <TableCell>{doc.document_name}</TableCell>
+                      <TableCell style={{ textTransform: "uppercase" }}>
+                        {doc.type_document}
+                      </TableCell>
+                      <TableCell>{doc.description}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           ) : (
