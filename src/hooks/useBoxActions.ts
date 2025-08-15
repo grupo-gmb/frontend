@@ -15,13 +15,12 @@ export const useBoxActions = (boxId: string, onSuccess?: () => void) => {
       if (formData.module && formData.line && formData.column && formData.slot) {
         location = `${formData.module}${formData.line}${formData.column}-${formData.slot}`;
       }
-       
-      const userId = String(session?.user?.id || ""); // Fallback user ID if session is not available
-      console.log("userId", session?.user?.id);
+
+      
 
       const movementData = {
         box_id: boxId,
-        user_id: "4f89d7f284ef4314" , // TODO: get from context
+        user_id: session?.user.id , 
         notes: formData.notes || getDefaultNotes(actionType),
       };
 

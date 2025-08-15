@@ -54,7 +54,7 @@ const DashboardPage = () => {
     <Layout>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Dashboard
+          Dashboard 
         </Typography>
 
         {/* Stats Cards - Mobile */}

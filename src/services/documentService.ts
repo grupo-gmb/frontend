@@ -16,7 +16,6 @@ interface ApiResponse<T>{
 
 export const getDocumentsById = async(id: string): Promise<DocumentData> => {
   const response = await nextApi.get(`/documents/${id}`);
-  console.log("GetDocumentsByID", response.data)
   return response.data
 }
 

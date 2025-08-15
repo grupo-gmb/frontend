@@ -31,6 +31,9 @@ export const {
         // 3. Se o login for bem-sucedido, retorne os dados para o NextAuth.js
         if (loginData && loginData.user) {
           // O objeto retornado aqui será passado para o callback 'jwt'
+          console.log("Login Data:", loginData.user.id);
+          console.log("Name Data:", loginData.user.name);
+          console.log("Name Data:", loginData.user.email);
           return {
             id: loginData.user.id,
             name: loginData.user.name,
@@ -51,7 +54,10 @@ export const {
     async jwt({ token, user }) {
       if (user) {
         // Na primeira vez (login), o objeto 'user' vindo do 'authorize' está disponível
+        console.log("JWT Callback User:", user.id);
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
         token.accessToken = user.accessToken;
         token.role = user.role;
         token.permissions = user.permissions;
@@ -63,6 +69,8 @@ export const {
     // 5. Exponha o accessToken para a sessão do lado do cliente
     async session({ session, token }) {
       if (token.accessToken && session.user) {
+        session.user.id = token.id;
+        session.user.name = token.name;
         session.user.accessToken = token.accessToken;
         session.user.role = token.role;
         session.user.permissions = token.permissions

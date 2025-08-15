@@ -43,20 +43,22 @@ import { useSnackbar } from "@/context/SnackBarContext";
 
 interface BoxDetailsAccordionProps {
   box: BoxData;
-  document: DocumentData[];
+  documents: DocumentData[];
   onDocumentAdded: (newDocument: DocumentData) => void;
 }
 
 export default function BoxDetailsAccordion({
   box,
-  document,
+  documents: initialDocuments,
   onDocumentAdded,
 }: BoxDetailsAccordionProps) {
   const { data: session } = useSession();
   const { showSnackbar } = useSnackbar();
   // Estados
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [documents, setDocuments] = useState<DocumentData[]>(document || []);
+  const [documents, setDocuments] = useState<DocumentData[]>(
+    initialDocuments || []
+  );
   const [currentBox, setCurrentBox] = useState<BoxData>(box);
   const [isDocumentLoading, setIsDocumentLoading] = useState(false);
   const [actionModalOpen, setActionModalOpen] = useState(false);
@@ -83,10 +85,9 @@ export default function BoxDetailsAccordion({
   // Efeitos
   useEffect(() => {
     setCurrentBox(box);
+    setDocuments(initialDocuments || []);
     console.log("Documents:", documents);
-  }, [box]);
-
- 
+  }, [box, initialDocuments]);
 
   // Handlers para documentos
   const handleAddDocument = async (formData: DocumentFormData) => {
@@ -116,7 +117,7 @@ export default function BoxDetailsAccordion({
         box_id: currentBox.id!,
         document_name: formData.name,
         type_document: formData.type,
-        user_id: "4f89d7f284ef4314",
+        user_id: session?.user.id,
         company_id: currentBox.company_id!,
         description: formData.description,
       } as Omit<DocumentData, "id">;
@@ -127,6 +128,7 @@ export default function BoxDetailsAccordion({
       onDocumentAdded(createdDocument);
 
       setDocuments((prev) => [...prev, createdDocument]);
+      console.log("documento meu", documents);
       showSnackbar({
         message: "Documento adicionado com sucesso!",
         severity: "success",

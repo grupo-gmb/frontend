@@ -121,7 +121,7 @@ const BoxPage = () => {
   }
 
   const handleDelete = async (data: BoxData) => {
-    /* ... sua lógica de delete ... */
+    /* ... lógica de delete ... */
   };
 
   async function handleOpenView(data: BoxData) {
@@ -135,6 +135,7 @@ const BoxPage = () => {
           ? [fetchedDocuments]
           : [];
       setSelectedBoxDetails({ ...detailedBox, documents: documentsArray });
+
       setDetailsModalOpen(true);
     } catch (error) {
       showSnackbar({
@@ -145,17 +146,36 @@ const BoxPage = () => {
   }
 
   const handleSaveBox = async (data: BoxData) => {
-    /* ... sua lógica de save ... */
+    try {
+      if (modalUpdate && editingBox?.id) {
+        //Atualização da caixa
+        await boxService.updateBox(editingBox.id, data);
+        showSnackbar({
+          message: "Caixa atualizada com sucesso",
+          severity: "success",
+        });
+      } else {
+        // Criação de nova caixa
+        const newBox = await boxService.createBox(data);
+        showSnackbar({
+          message: "Caixa criada com sucesso",
+          severity: "success",
+        });
+      }
+      fetchBoxes();
+    } catch (error) {
+      const errorMessage = getApiErrorMessage(error);
+      showSnackbar({ message: errorMessage, severity: "error" });
+    }
   };
 
-  // ✅ FUNÇÃO CORRIGIDA
   const handleDocumentAdded = (boxId: string, newDocument: DocumentData) => {
     setBoxes((prevBoxes) =>
       prevBoxes.map((box) => {
         if (box.id === boxId) {
           return {
             ...box,
-            documents: [...(box.documents || []), newDocument], // ✅ CORRETO: 'documents' (plural)
+            documents: [...(box.documents || []), newDocument],
           };
         }
         return box;
@@ -170,7 +190,6 @@ const BoxPage = () => {
     });
   };
 
-  // ✅ FUNÇÃO CORRIGIDA
   const fetchBoxes = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -190,11 +209,12 @@ const BoxPage = () => {
               : [];
           return {
             ...box,
-            documents: documentsArray.filter((doc) => doc), // ✅ CORRETO: 'documents' (plural) e limpo
+            documents: documentsArray.filter((doc) => doc),
           };
         })
       );
       setBoxes(boxesWithDocs);
+      console.log("box-page-boxeswithDocs", boxes);
     } catch (error) {
       showSnackbar({ message: "Erro ao buscar caixas", severity: "error" });
     } finally {
@@ -202,7 +222,7 @@ const BoxPage = () => {
     }
   }, [showSnackbar]);
 
-  // ✅ LÓGICA DE FILTRAGEM SIMPLIFICADA E CORRIGIDA
+  // Filtra as caixas com base no status, cliente e termo de pesquisa
   const filteredBoxes = boxes.filter((box) => {
     if (filterStatus && box.status !== filterStatus) return false;
     if (filterClient && box.company?.id !== filterClient) return false;
@@ -249,8 +269,7 @@ const BoxPage = () => {
             startIcon={<AddCircle />}
             disabled={!hasPermission("box:create")}
           >
-            {" "}
-            Nova caixa{" "}
+            Nova caixa
           </Button>
         </Box>
 
@@ -328,7 +347,7 @@ const BoxPage = () => {
         {selectedBoxDetails ? (
           <BoxDetailsAccordion
             box={selectedBoxDetails}
-            document={selectedBoxDetails.documents || []}
+            documents={selectedBoxDetails.documents || []}
             onDocumentAdded={(newDocument) =>
               handleDocumentAdded(selectedBoxDetails.id!, newDocument)
             }
